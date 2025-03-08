@@ -1,4 +1,5 @@
--- 🚨 1️⃣ Remove Non-Numeric Characters from `ORDER_TOTAL_AMOUNT` and `INVOICE_AMOUNT`
+-- Remove Non-Numeric Characters from `ORDER_TOTAL_AMOUNT` and `INVOICE_AMOUNT`
+
 UPDATE BCM_ORDER_MGT
 SET ORDER_TOTAL_AMOUNT = NULL
 WHERE ORDER_TOTAL_AMOUNT NOT REGEXP '^[0-9,.]+$';
@@ -15,7 +16,8 @@ UPDATE BCM_ORDER_MGT
 SET INVOICE_AMOUNT = REPLACE(INVOICE_AMOUNT, ',', '')
 WHERE INVOICE_AMOUNT IS NOT NULL;
 
--- 🚨 2️⃣ Remove Non-Numeric Characters from `ORDER_LINE_AMOUNT`
+-- Remove Non-Numeric Characters from `ORDER_LINE_AMOUNT`
+
 UPDATE BCM_ORDER_MGT
 SET ORDER_LINE_AMOUNT = NULL
 WHERE ORDER_LINE_AMOUNT NOT REGEXP '^[0-9,.]+$';
@@ -24,22 +26,26 @@ UPDATE BCM_ORDER_MGT
 SET ORDER_LINE_AMOUNT = REPLACE(ORDER_LINE_AMOUNT, ',', '')
 WHERE ORDER_LINE_AMOUNT IS NOT NULL;
 
--- 🚨 3️⃣ Remove Invalid Characters from `SUPP_CONTACT_NUMBER`
+-- Remove Invalid Characters from `SUPP_CONTACT_NUMBER`
+
 UPDATE BCM_ORDER_MGT
 SET SUPP_CONTACT_NUMBER = REGEXP_REPLACE(SUPP_CONTACT_NUMBER, '[^0-9,]', '')
 WHERE SUPP_CONTACT_NUMBER IS NOT NULL;
 
--- 🚨 4️⃣ Ensure `ORDER_DATE` is in a Valid Format (`DD-MMM-YYYY`)
+-- Ensuring `ORDER_DATE` is in a Valid Format (`DD-MMM-YYYY`)
+
 UPDATE BCM_ORDER_MGT
 SET ORDER_DATE = NULL
 WHERE STR_TO_DATE(ORDER_DATE, '%d-%b-%Y') IS NULL;
 
--- 🚨 5️⃣ Ensure `INVOICE_DATE` is in a Valid Format (`DD-MMM-YYYY`)
+-- Ensuring `INVOICE_DATE` is in a Valid Format (`DD-MMM-YYYY`)
+
 UPDATE BCM_ORDER_MGT
 SET INVOICE_DATE = NULL
 WHERE INVOICE_DATE IS NOT NULL AND STR_TO_DATE(INVOICE_DATE, '%d-%b-%Y') IS NULL;
 
--- 🚨 6️⃣ Convert NULL or Empty Numeric Fields to Default Values (`0.00`)
+-- Converting NULL fields to Default Values (`0.00`)
+
 UPDATE BCM_ORDER_MGT
 SET ORDER_TOTAL_AMOUNT = '0.00'
 WHERE ORDER_TOTAL_AMOUNT IS NULL OR ORDER_TOTAL_AMOUNT = '';
@@ -52,7 +58,8 @@ UPDATE BCM_ORDER_MGT
 SET ORDER_LINE_AMOUNT = '0.00'
 WHERE ORDER_LINE_AMOUNT IS NULL OR ORDER_LINE_AMOUNT = '';
 
--- 🚨 7️⃣ Trim Spaces from All Fields to Ensure Clean Data
+-- Trimming Spaces from All Fields to Ensure Clean Data
+
 UPDATE BCM_ORDER_MGT
 SET ORDER_REF = TRIM(ORDER_REF),
     ORDER_DATE = TRIM(ORDER_DATE),
